@@ -1,2 +1,2 @@
-# full-send
-peer-to-peer file transfer
+# Nova
+A cross-platform peer-to-peer file transfer app
