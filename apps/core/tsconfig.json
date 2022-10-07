@@ -1,0 +1,33 @@
+{
+	"compilerOptions": {
+	  "incremental": true,
+	  "target": "es2021",
+	  "module": "commonjs",
+	  "lib": ["dom", "es2021"],
+	  "jsx": "react-jsx",
+	  "sourceMap": true,
+	  "baseUrl": "./src",
+	  "rootDir": "src",
+	  "moduleResolution": "node",
+	  "esModuleInterop": true,
+	  "allowSyntheticDefaultImports": true,
+	  "resolveJsonModule": true,
+	  "allowJs": true,
+	  "outDir": "build"
+	},
+	"watchOptions": {
+		// Use native file system events for files and directories
+		"watchFile": "useFsEvents",
+		"watchDirectory": "useFsEvents",
+		// Poll files for updates more frequently
+		// when they're updated a lot.
+		"fallbackPolling": "dynamicPriority",
+		// Don't coalesce watch notification
+		"synchronousWatchDirectory": true,
+		// Finally, two additional settings for reducing the amount of possible
+		// files to track  work from these directories
+		"excludeDirectories": ["**/node_modules", "build"],
+	},
+	"exclude": ["test",]
+  }
+  

@@ -37,5 +37,14 @@ To work within a workspace, run the following command:
 
 ```
 cd nova
-npm run dev -- --filter [workspace]
+npm run <script> -- --filter [workspace]
+```
+
+### Adding Packages
+
+To add a package to a workspace, run the following command:
+
+```
+cd nova
+npm install <package> --workspace=<workspace>
 ```
