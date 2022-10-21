@@ -4,9 +4,7 @@
   "type": "module",
   "scripts": {
     "build": "",
-    "dev": "",
-    "lint": "turbo run lint",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+    "dev": ""
   },
   "devDependencies": {
     "eslint-config-custom": "*",
