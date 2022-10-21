@@ -1,9 +1,5 @@
 // import net module from node
 import net from 'node:net';
-// import dotenv package
-// import * as dotenv from 'dotenv';
-// load environment variables
-// dotenv.config();
 
 // creates the server
 const server = net.createServer();
@@ -14,19 +10,20 @@ server.on('error', (err) => {
       console.log('Address in use, retrying...');
       setTimeout(() => {
          server.close();
-         server.listen(1337, 'localhost');
+         server.listen(1337, '127.0.0.1');
       }, 1000);
    }
    console.log(err);
    throw err;
 });
 
+// on client connection event
 server.on('connection', (socket) => {
    console.log('Client connected to server.');
 
    // Server details
-   const address = socket.localAddress;
-   const port = socket.localPort;
+   const address = socket.address().address;
+   const port = socket.address().port;
    console.log(`Server is listening at local address: ${address}:${port}`);
 
    // Client details
@@ -54,3 +51,5 @@ server.on('connection', (socket) => {
       socket.end('Timed out');
    });
 });
+
+server.listen(1337)
