@@ -4,7 +4,6 @@
 	  "target": "es2021",
 	  "module": "commonjs",
 	  "lib": ["dom", "es2021"],
-	  "jsx": "react-jsx",
 	  "sourceMap": true,
 	  "baseUrl": "./src",
 	  "rootDir": "src",
@@ -26,7 +25,7 @@
 		"synchronousWatchDirectory": true,
 		// Finally, two additional settings for reducing the amount of possible
 		// files to track  work from these directories
-		"excludeDirectories": ["**/node_modules", "build"],
+		"excludeDirectories": ["./node_modules", "build"],
 	},
 	"exclude": ["test",]
   }
