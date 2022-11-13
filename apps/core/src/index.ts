@@ -1,10 +1,5 @@
-// import net module from node
 import net from 'node:net';
 import readline from 'node:readline'
-// import dotenv package
-// import * as dotenv from 'dotenv';
-// load environment variables
-// dotenv.config();
 
 readline.emitKeypressEvents(process.stdin);
 if (process.stdin.isTTY) process.stdin.setRawMode(true);
