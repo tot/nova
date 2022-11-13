@@ -1,9 +1,18 @@
 // import net module from node
 import net from 'node:net';
+import readline from 'node:readline'
 // import dotenv package
 // import * as dotenv from 'dotenv';
 // load environment variables
 // dotenv.config();
+
+readline.emitKeypressEvents(process.stdin);
+if (process.stdin.isTTY) process.stdin.setRawMode(true);
+
+process.stdin.on("keypress", (str, key) => {
+    console.log(key.name)
+	if(key.name == "j") process.exit() 
+})
 
 // creates the server
 const server = net.createServer();
@@ -54,3 +63,5 @@ server.on('connection', (socket) => {
       socket.end('Timed out');
    });
 });
+
+server.listen(1337)
