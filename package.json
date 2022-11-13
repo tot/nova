@@ -1,25 +1,20 @@
 {
   "name": "nova",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "private": true,
   "workspaces": [
-    "apps/*",
-    "packages/*"
+    "apps/client",
+    "apps/core"
   ],
   "scripts": {
-    "build": "turbo run build",
-    "dev": "turbo run dev --parallel",
-    "lint": "turbo run lint",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\""
   },
   "devDependencies": {
-    "eslint-config-custom": "*",
-    "prettier": "latest",
-    "turbo": "latest"
+    "prettier": "latest"
   },
   "engines": {
     "node": ">=14.0.0"
   },
-  "dependencies": {},
-  "packageManager": "npm@8.5.4"
+  "dependencies": {
+    "dotenv": "^16.0.3"
+  }
 }
