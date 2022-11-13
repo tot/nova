@@ -6,8 +6,9 @@ node_modules
 # testing
 coverage
 
-out/
-build
+# output files
+apps/**/dist
+
 
 # misc
 .DS_Store
