@@ -1,0 +1,25 @@
+{
+	"extends": "../../tsconfig.json",
+	"compilerOptions": {
+	  "rootDir": ".",
+	  "outDir": "./dist",
+	  "baseUrl": ".",
+	  "sourceMap": true,
+	  "resolveJsonModule": true,
+	  "composite": true,
+	  "allowJs": false,
+	  "declaration": true,
+	  "declarationMap": true,
+	  "allowSyntheticDefaultImports": true,
+	  "paths": {
+		"@nova/client": ["../client/src/index.ts"]
+	  }
+	},
+	"references": [
+	  {
+		"path": "../client"
+	  }
+	],
+	"include": ["src/**/*"],
+	"exclude": ["node_modules", "dist"]
+  }

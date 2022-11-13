@@ -3,10 +3,13 @@
   "version": "0.0.1",
   "private": true,
   "workspaces": [
-    "apps/client",
-    "apps/core"
+    "apps/*",
+    "packages/*"
   ],
   "scripts": {
+    "dev:server": "npm run dev --workspace=core",
+    "watch:server": "npm run start:watch --workspace=core",
+    "start:server": "npm run start --workspace=core"
   },
   "devDependencies": {
     "prettier": "latest"

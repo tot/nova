@@ -24,5 +24,18 @@
   "bugs": {
     "url": "https://github.com/tot/nova/issues"
   },
-  "homepage": "https://github.com/tot/nova#readme"
+  "homepage": "https://github.com/tot/nova#readme",
+  "dependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.42.1",
+    "@typescript-eslint/parser": "^5.42.1",
+    "eslint": "^8.27.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-config-standard": "^17.0.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^6.1.1",
+    "nanoid": "^4.0.0",
+    "prettier": "^2.7.1",
+    "@nova/core": "^0.0.1"
+  }
 }
