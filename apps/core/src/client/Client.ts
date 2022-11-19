@@ -1,14 +1,16 @@
 import sha256 from '../utils/hash';
 import { KeyPair } from '../types/types';
-const Hyperswarm = require('hyperswarm');
-const DHT = require('@hyperswarm/dht');
+import Hyperswarm from 'hyperswarm';
+import DHT from '@hyperswarm/dht';
 
 class Client {
    private _swarm: typeof Hyperswarm;
+   private _id: string;
    private _keyPair: KeyPair;
 
-   constructor(seed: string) {
-      this._keyPair = DHT.keyPair(Buffer.alloc(32).fill(sha256(seed)));
+   constructor(id: string) {
+      this._keyPair = DHT.keyPair(Buffer.alloc(32).fill(sha256(id)));
+      this._id = id;
    }
 
    async initialize() {
@@ -16,7 +18,6 @@ class Client {
       this._swarm.on('connection', (conn: any, info: any) => {
          conn.on('data', (data: any) => console.log('client got message:', data.toString()));
          conn.write('this is a client connection');
-         console.log('connected');
       });
    }
 
@@ -30,9 +31,8 @@ class Client {
       this._swarm.joinPeer(pubKey);
    }
 
-   public info() {
-      console.log(this._swarm.connections);
-      console.log(this._swarm.peers);
+   public get id() {
+      return this._id;
    }
 
    public get keyPair() {
@@ -41,6 +41,10 @@ class Client {
 
    public get publicKey() {
       return this._swarm.keyPair.publicKey;
+   }
+
+   public get peers() {
+      return this._swarm.peers;
    }
 }
 export default Client;

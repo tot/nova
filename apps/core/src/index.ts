@@ -2,7 +2,7 @@ import readline from 'readline';
 import Server from './server/Server';
 import Client from './client/Client';
 
-// const topic = Buffer.alloc(32).fill('hello world this is a test'); // A topic must be 32 bytes
+const topic = Buffer.alloc(32).fill('hello world this is a test'); // A topic must be 32 bytes
 const server = new Server('bean figure economy pear shield');
 const peer = new Client('bean figure economy pear mute');
 
@@ -20,12 +20,9 @@ process.stdin.on('keypress', (str, key) => {
 });
 
 (async () => {
-   // await server.join(topic);
-   // await peer.join(topic);
+   await server.join(topic);
+   await peer.join(topic);
    await server.listen();
    await peer.joinPeer('bean figure economy pear shield');
-   console.log('joined peer');
    // await server.joinPeer('bean figure economy pear mute');
-   server.info();
-   peer.info();
 })();
