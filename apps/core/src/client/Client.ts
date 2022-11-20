@@ -17,10 +17,17 @@ class Client {
       this._swarm = new Hyperswarm({ keyPair: this._keyPair });
       this._swarm.on('connection', (conn: any, info: any) => {
          conn.on('data', (res: any) => {
-            console.log('response: ', JSON.parse(res.toString()));
-            // const data = JSON.parse(res);
-            // console.log(data);
-            // console.log('client got message:', res.toString());
+            const parsed = JSON.parse(res.toString());
+            // console.log('Response: ', parsed);
+            if (parsed.target !== 'all' && parsed.target !== this._id) {
+               console.log('Pass: Target destination not me');
+            } else {
+               if (parsed.content.type === 'String') {
+                  console.log(`Received ${parsed.content.type}: ${parsed.content.data.trim()}`);
+               } else {
+                  console.log(`Received ${parsed.content.type}: ${parsed.content.data}`);
+               }
+            }
          });
          conn.write('this is a client connection');
       });

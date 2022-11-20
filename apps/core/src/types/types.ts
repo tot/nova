@@ -4,7 +4,16 @@ export interface KeyPair {
 }
 
 export interface ServerEvent {
+   target: string;
+   content: Content;
+}
+
+interface Content {
    type: string;
+   data: any;
+}
+
+export interface Response {
    target: string;
    content: any;
 }

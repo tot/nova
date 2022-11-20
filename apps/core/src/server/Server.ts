@@ -9,6 +9,7 @@ class Server {
    private _swarm: typeof Hyperswarm;
    private _peerCount: number;
    private _connections: any[];
+   private _peers: any[];
    private _events: Subject<ServerEvent>;
    private _id: string;
    private _keyPair: KeyPair;
@@ -17,6 +18,7 @@ class Server {
       this._peerCount = 0;
       this._events = new Subject();
       this._connections = [];
+      this._peers = [];
       this._id = id;
       this._keyPair = DHT.keyPair(Buffer.alloc(32).fill(sha256(id)));
    }
@@ -27,12 +29,12 @@ class Server {
          console.log('connected');
          this._peerCount += 1;
          this._connections.push(conn);
+         this._peers.push(info);
 
          conn.on('data', (data: any) => console.log('client sent message:', data.toString()));
 
          this._events.subscribe((event: any) => {
             if (event.type === 'send') {
-               // console.log('sending data: ', event.content);
                console.log(event);
                return conn.write(
                   JSON.stringify({
@@ -51,7 +53,14 @@ class Server {
             }
          });
 
-         conn.write(Buffer.from(JSON.stringify({ target: 'all', content: 'hello world' })));
+         conn.write(
+            Buffer.from(
+               JSON.stringify({
+                  target: 'all',
+                  content: { type: 'String', data: 'server connected to client' }
+               })
+            )
+         );
       });
    }
 

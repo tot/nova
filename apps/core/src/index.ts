@@ -5,11 +5,9 @@ import Client from './client/Client';
 const topic = Buffer.alloc(32).fill('hello world this is a test'); // A topic must be 32 bytes
 const server = new Server('bean figure economy pear shield');
 const peer = new Client('bean figure economy pear mute');
-const peertwo = new Client('bean figure network halo');
 
 server.initialize();
 peer.initialize();
-peertwo.initialize();
 
 readline.emitKeypressEvents(process.stdin);
 if (process.stdin.isTTY) process.stdin.setRawMode(true);
@@ -24,9 +22,5 @@ process.stdin.on('keypress', (str, key) => {
 (async () => {
    await server.join(topic);
    await peer.join(topic);
-   await peertwo.join(topic);
-   // await server.listen();
-   // await peer.joinPeer('bean figure economy pear shield');
-   console.log('Peers: ', server.peers);
-   // await server.joinPeer('bean figure economy pear mute');
+   // console.log('Peers: ', server.peers);
 })();
