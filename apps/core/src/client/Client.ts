@@ -14,9 +14,14 @@ class Client {
    }
 
    async initialize() {
-      this._swarm = new Hyperswarm({ keyPair: this.keyPair });
+      this._swarm = new Hyperswarm({ keyPair: this._keyPair });
       this._swarm.on('connection', (conn: any, info: any) => {
-         conn.on('data', (data: any) => console.log('client got message:', data.toString()));
+         conn.on('data', (res: any) => {
+            console.log('response: ', JSON.parse(res.toString()));
+            // const data = JSON.parse(res);
+            // console.log(data);
+            // console.log('client got message:', res.toString());
+         });
          conn.write('this is a client connection');
       });
    }
@@ -24,6 +29,7 @@ class Client {
    async join(topic: Buffer) {
       this._swarm.join(topic, { server: true, client: true });
       await this._swarm.flush();
+      console.log(`${this._id} joined topic!`);
    }
 
    async joinPeer(seed: string) {

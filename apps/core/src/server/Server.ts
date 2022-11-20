@@ -28,20 +28,22 @@ class Server {
          this._peerCount += 1;
          this._connections.push(conn);
 
-         conn.on('data', (data: any) => console.log('client got message:', data.toString()));
+         conn.on('data', (data: any) => console.log('client sent message:', data.toString()));
 
          this._events.subscribe((event: any) => {
             if (event.type === 'send') {
-               console.log('sending data: ', event.content);
+               // console.log('sending data: ', event.content);
+               console.log(event);
                return conn.write(
                   JSON.stringify({
+                     target: event.target,
                      content: event.content
                   })
                );
             }
 
             if (event.type === 'disconnect') {
-               this._peerCount = 0;
+               this._peerCount -= 1;
                console.log('disconnect');
                conn.end();
                conn.destroy();
@@ -49,7 +51,7 @@ class Server {
             }
          });
 
-         conn.write('this is a server connection');
+         conn.write(Buffer.from(JSON.stringify({ target: 'all', content: 'hello world' })));
       });
    }
 
@@ -57,16 +59,21 @@ class Server {
       return new Promise(async (resolve, reject) => {
          const discovery = this._swarm.join(topic, { server: true, client: true });
          await discovery.flushed();
+         console.log('Server joined topic!');
          resolve(true);
       });
    }
 
    public async send() {
       const filePath = path.join(__dirname, '../file.txt');
-      console.log(filePath);
+      console.log('Sending ', filePath);
       const file = await fs.readFile(filePath);
-      console.log(file);
-      this._events.next({ type: 'send', content: file });
+      const data = {
+         type: 'send',
+         target: 'all',
+         content: file
+      };
+      this._events.next(data);
    }
 
    public async listen() {

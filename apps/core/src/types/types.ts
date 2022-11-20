@@ -5,5 +5,6 @@ export interface KeyPair {
 
 export interface ServerEvent {
    type: string;
+   target: string;
    content: any;
 }
