@@ -1,16 +1,19 @@
 import Hyperswarm from 'hyperswarm';
 import DHT from '@hyperswarm/dht';
 import { Subject } from 'rxjs';
-import fs from 'node:fs/promises';
+import { Buffer } from 'node:buffer';
+import fs from 'node:fs';
+import fileHandle from 'node:fs/promises';
 import path from 'node:path';
 import sha256 from '../utils/hash';
-import { KeyPair, ServerEvent } from '../types/types';
+import { KeyPair, SendEvent } from '../types/types';
+import { buffer } from 'node:stream/consumers';
 class Server {
    private _swarm: typeof Hyperswarm;
    private _peerCount: number;
    private _connections: any[];
    private _peers: any[];
-   private _events: Subject<ServerEvent>;
+   private _events: Subject<SendEvent>;
    private _id: string;
    private _keyPair: KeyPair;
 
@@ -76,13 +79,20 @@ class Server {
    public async send() {
       const filePath = path.join(__dirname, '../file.txt');
       console.log('Sending ', filePath);
-      const file = await fs.readFile(filePath);
-      const data = {
-         type: 'send',
-         target: 'all',
-         content: file
-      };
-      this._events.next(data);
+      const buf = new Buffer();
+      const filehandle = await fs.promises.open(filePath, 'r+');
+      const file = await filehandle.read(buf, 0, null, 0);
+      // const file = await fs.readFile(filePath);
+      const jsonBuffer = JSON.parse(file.toString());
+      console.log('JSON: ', jsonBuffer);
+      // const data = {
+      //    type: 'send',
+      //    content: {
+      //       type: 'Buffer',
+      //       data: file
+      //    }
+      // };
+      // this._events.next(data);
    }
 
    public async listen() {

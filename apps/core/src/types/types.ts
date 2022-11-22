@@ -3,7 +3,7 @@ export interface KeyPair {
    secretKey: Buffer;
 }
 
-export interface ServerEvent {
+export interface SendEvent {
    target: string;
    content: Content;
 }

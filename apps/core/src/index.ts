@@ -21,6 +21,6 @@ process.stdin.on('keypress', (str, key) => {
 
 (async () => {
    await server.join(topic);
-   await peer.join(topic);
+   // await peer.join(topic);
    // console.log('Peers: ', server.peers);
 })();

@@ -17,6 +17,7 @@ class Client {
       this._swarm = new Hyperswarm({ keyPair: this._keyPair });
       this._swarm.on('connection', (conn: any, info: any) => {
          conn.on('data', (res: any) => {
+            console.log('Recevied data! Now processing...');
             const parsed = JSON.parse(res.toString());
             // console.log('Response: ', parsed);
             if (parsed.target !== 'all' && parsed.target !== this._id) {
