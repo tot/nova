@@ -1,53 +1,127 @@
-import net from 'node:net';
+import Hyperswarm from 'hyperswarm';
+import DHT from '@hyperswarm/dht';
+import { Subject } from 'rxjs';
+import { Buffer } from 'node:buffer';
+import fs from 'node:fs';
+import fileHandle from 'node:fs/promises';
+import path from 'node:path';
+import sha256 from '../utils/hash';
+import { KeyPair, SendEvent } from '../types/types';
+import { buffer } from 'node:stream/consumers';
+class Server {
+   private _swarm: typeof Hyperswarm;
+   private _peerCount: number;
+   private _connections: any[];
+   private _peers: any[];
+   private _events: Subject<SendEvent>;
+   private _id: string;
+   private _keyPair: KeyPair;
 
-// creates the server
-const server = net.createServer();
-
-// on 'error' Event, throw error
-server.on('error', (err) => {
-   if (err.message === 'EADDRINUSE') {
-      console.log('Address in use, retrying...');
-      setTimeout(() => {
-         server.close();
-         server.listen(1337, 'localhost');
-      }, 1000);
+   constructor(id: string) {
+      this._peerCount = 0;
+      this._events = new Subject();
+      this._connections = [];
+      this._peers = [];
+      this._id = id;
+      this._keyPair = DHT.keyPair(Buffer.alloc(32).fill(sha256(id)));
    }
-   console.log(err);
-   throw err;
-});
 
-server.on('connection', (socket) => {
-   console.log('Client connected to server.');
+   public async initialize() {
+      this._swarm = new Hyperswarm({ keyPair: this._keyPair });
+      this._swarm.on('connection', (conn: any, info: any) => {
+         console.log('connected');
+         this._peerCount += 1;
+         this._connections.push(conn);
+         this._peers.push(info);
 
-   // Server details
-   const address = socket.localAddress;
-   const port = socket.localPort;
-   console.log(`Server is listening at local address: ${address}:${port}`);
+         conn.on('data', (data: any) => console.log('client sent message:', data.toString()));
 
-   // Client details
-   const remoteAddress = socket.remoteAddress;
-   const remotePort = socket.remotePort;
-   console.log(`Remote socket is listening at address: ${remoteAddress}:${remotePort}`);
+         this._events.subscribe((event: any) => {
+            if (event.type === 'send') {
+               console.log(event);
+               return conn.write(
+                  JSON.stringify({
+                     target: event.target,
+                     content: event.content
+                  })
+               );
+            }
 
-   // Get number of concurrent connections to server
-   server.getConnections((err, count) => {
-      console.log(`Number of connections: ${count}`);
-   });
+            if (event.type === 'disconnect') {
+               this._peerCount -= 1;
+               console.log('disconnect');
+               conn.end();
+               conn.destroy();
+               return;
+            }
+         });
 
-   socket.on('data', (data) => {
-      socket.write(data + '\r\n');
-   });
+         conn.write(
+            Buffer.from(
+               JSON.stringify({
+                  target: 'all',
+                  content: { type: 'String', data: 'server connected to client' }
+               })
+            )
+         );
+      });
+   }
 
-   // Client disconnected
-   socket.on('end', () => {
-      console.log('Client disconnected!');
-   });
+   public async join(topic: Buffer) {
+      return new Promise(async (resolve, reject) => {
+         const discovery = this._swarm.join(topic, { server: true, client: true });
+         await discovery.flushed();
+         console.log('Server joined topic!');
+         resolve(true);
+      });
+   }
 
-   // Socket timed out -- stalled, couldn't create, etc
-   socket.on('timeout', () => {
-      console.log('Socket timed out');
-      socket.end('Timed out');
-   });
-});
+   public async send() {
+      const filePath = path.join(__dirname, '../file.txt');
+      console.log('Sending ', filePath);
+      const buf = new Buffer();
+      const filehandle = await fs.promises.open(filePath, 'r+');
+      const file = await filehandle.read(buf, 0, null, 0);
+      // const file = await fs.readFile(filePath);
+      const jsonBuffer = JSON.parse(file.toString());
+      console.log('JSON: ', jsonBuffer);
+      // const data = {
+      //    type: 'send',
+      //    content: {
+      //       type: 'Buffer',
+      //       data: file
+      //    }
+      // };
+      // this._events.next(data);
+   }
 
-export default server
+   public async listen() {
+      await this._swarm.listen();
+   }
+
+   async joinPeer(seed: string) {
+      const pubKey = DHT.keyPair(Buffer.alloc(32).fill(sha256(seed))).publicKey;
+      this._swarm.joinPeer(pubKey);
+   }
+
+   public get id() {
+      return this._id;
+   }
+
+   public get keyPair() {
+      return this._keyPair;
+   }
+
+   public get publicKey() {
+      return this._swarm.keyPair.publicKey;
+   }
+
+   public get peerCount() {
+      return this._peerCount;
+   }
+
+   public get peers() {
+      return this._swarm.peers;
+   }
+}
+export default Server;

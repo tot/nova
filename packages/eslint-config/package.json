@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "eslint config",
   "main": "index.js",
-  "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -16,5 +15,11 @@
   "bugs": {
     "url": "https://github.com/tot/nova/issues"
   },
-  "homepage": "https://github.com/tot/nova#readme"
+  "homepage": "https://github.com/tot/nova#readme",
+  "dependencies": {
+    "dat-swarm-defaults": "^1.0.3",
+    "discovery-swarm": "^6.1.0",
+    "get-port": "^6.1.2",
+    "portfinder": "^1.0.32"
+  }
 }

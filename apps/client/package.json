@@ -27,7 +27,6 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^6.1.1",
     "prettier": "^2.7.1",
-    "typescript": "^4.8.4",
-    "@nova/client": "^0.0.1"
+    "typescript": "^4.8.4"
   }
 }
