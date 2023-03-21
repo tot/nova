@@ -12,7 +12,8 @@
       "declarationMap": true,
       "allowSyntheticDefaultImports": true,
       "paths": {
-         "@nova/core": ["../core/src/index.ts"]
+         "@nova/core": ["../core/src/index.ts"],
+         "@src": ["src/"]
       }
    },
    "include": ["src/**/*"],

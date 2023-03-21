@@ -1,19 +1,18 @@
-export interface KeyPair {
-   publicKey: Buffer;
-   secretKey: Buffer;
-}
-
-export interface SendEvent {
-   target: string;
-   content: Content;
-}
-
-interface Content {
+export interface SendableMessage {
    type: string;
-   data: any;
+   data: { [key: string]: any };
 }
 
-export interface Response {
-   target: string;
-   content: any;
+export interface MessageEvent {
+   connectionId: string;
+   message: { [key: string]: any };
+}
+
+export interface Packet {
+   id: string;
+   ttl: number;
+   type: string;
+   message: SendableMessage;
+   destination?: string;
+   origin: string;
 }
