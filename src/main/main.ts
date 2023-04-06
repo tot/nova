@@ -50,8 +50,9 @@ ipcMain.handle('listen', async (event, ...args) => {
   console.log('serverside listen');
   node.listen(3000, '0.0.0.0', () => {
     msg.success = true;
+    console.log('logger');
   });
-
+  console.log(msg);
   return msg;
 });
 
@@ -71,8 +72,10 @@ ipcMain.handle('connect', async (event, ...args) => {
 
 ipcMain.handle('get_ip', async (event, ...args) => {
   const interfaces = os.networkInterfaces();
-  const ip = interfaces.en0[1].address;
-  return ip;
+  // Add check for operating system win32
+  // for windows, should be interfaces["Wi-Fi"][1].address
+  // const ip = interfaces.en0[1].address;
+  return '';
 });
 
 node.on('_connect', () => {

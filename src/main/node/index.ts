@@ -34,9 +34,9 @@ const Server = () => {
     // Handle pipe for receiving messages
 
     // TODO: Redo messageStream and type it
-    socket.pipe(messageStream()).on('data', (message: any) => {
-      emitter.emit('_message', { connectionId, message });
-    });
+    // socket.pipe(messageStream()).on('data', (message: any) => {
+    //   emitter.emit('_message', { connectionId, message });
+    // });
   };
 
   const server = createServer((socket) => handleNewSocket(socket));

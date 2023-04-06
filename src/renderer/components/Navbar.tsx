@@ -43,6 +43,7 @@ function Navbar() {
   useEffect(() => {
     const getData = async () => {
       const res = await window.electron.ipcRenderer.invoke('listen', []);
+      console.log(res);
       if (res.success) setListening(true);
     };
 
