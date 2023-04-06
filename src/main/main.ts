@@ -48,21 +48,35 @@ ipcMain.handle('listen', async (event, ...args) => {
     success: false,
   };
   console.log('serverside listen');
-  // node.listen(8080, '0.0.0.0', () => {
-  //   msg.success = true;
-  // });
+  node.listen(3000, '0.0.0.0', () => {
+    msg.success = true;
+  });
 
   return msg;
 });
 
-ipcMain.on('connect', async (event, ...args) => {
-  event.reply('connect', 'connected to new client');
+ipcMain.handle('connect', async (event, ...args) => {
+  const msg = {
+    event: 'connect',
+    success: false,
+  };
+  const splitIP = args[0][0].split(':');
+  console.log(splitIP);
+  node.connect(splitIP[0], Number(splitIP[1]), () => {
+    console.log('connected');
+    msg.success = true;
+  });
+  return msg;
 });
 
 ipcMain.handle('get_ip', async (event, ...args) => {
   const interfaces = os.networkInterfaces();
   const ip = interfaces.en0[1].address;
   return ip;
+});
+
+node.on('_connect', () => {
+  console.log('abcs');
 });
 
 if (process.env.NODE_ENV === 'production') {
