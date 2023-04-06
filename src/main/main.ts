@@ -16,6 +16,7 @@ import os from 'os';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 import createNode from './node';
+import prisma from './prisma';
 
 class AppUpdater {
   constructor() {
@@ -32,6 +33,12 @@ const node = createNode();
 ipcMain.on('ipc-example', async (event, arg) => {
   const msgTemplate = (pingPong: string) => `IPC test: ${pingPong}`;
   console.log(msgTemplate(arg));
+  const data = await prisma.peer.findMany({
+    where: {
+      ip: '192.168.1.1',
+    },
+  });
+  console.log('database search: ', data);
   event.reply('ipc-example', msgTemplate('pong'));
 });
 
@@ -131,8 +138,8 @@ const createWindow = async () => {
   menuBuilder.buildMenu();
 
   // Open urls in the user's browser
-  mainWindow.webContents.setWindowOpenHandler((edata) => {
-    shell.openExternal(edata.url);
+  mainWindow.webContents.setWindowOpenHandler((data) => {
+    shell.openExternal(data.url);
     return { action: 'deny' };
   });
 

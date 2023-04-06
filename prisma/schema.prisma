@@ -1,0 +1,28 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Peer {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ip        String
+  port      String
+  name      String
+}
+
+model Transfer {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  from      String
+  to        String
+  name      String
+  type      String
+  size      Int // size in bytes
+  path      String
+}
