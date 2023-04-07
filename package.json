@@ -46,9 +46,15 @@
     "start:preload": "cross-env NODE_ENV=development TS_NODE_TRANSPILE_ONLY=true webpack --config ./.erb/configs/webpack.config.preload.dev.ts",
     "start:renderer": "cross-env NODE_ENV=development TS_NODE_TRANSPILE_ONLY=true webpack serve --config ./.erb/configs/webpack.config.renderer.dev.ts",
     "test": "jest",
-    "generate": "npx prisma generate"
+    "generate": "npx prisma generate",
+    "seed": "ts-node prisma/seed.ts",
+    "migrate:dev": "npx prisma migrate dev",
+    "reset:dev": "npx prisma migrate reset"
   },
   "browserslist": [],
+  "prisma": {
+    "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
+  },
   "prettier": {
     "singleQuote": true,
     "overrides": [

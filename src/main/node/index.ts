@@ -23,7 +23,12 @@ const Server = () => {
 
     connections.set(connectionId, socket);
     connectionsCount += 1;
-    emitter.emit('_connect', connectionId);
+    emitter.emit(
+      '_connect',
+      connectionId,
+      socket.remoteAddress,
+      socket.remotePort
+    );
 
     socket.on('close', () => {
       connections.delete(connectionId);
@@ -34,9 +39,9 @@ const Server = () => {
     // Handle pipe for receiving messages
 
     // TODO: Redo messageStream and type it
-    // socket.pipe(messageStream()).on('data', (message: any) => {
-    //   emitter.emit('_message', { connectionId, message });
-    // });
+    socket.pipe(messageStream()).on('data', (message: any) => {
+      emitter.emit('_message', { connectionId, message });
+    });
   };
 
   const server = createServer((socket) => handleNewSocket(socket));
@@ -142,22 +147,23 @@ const Server = () => {
   emitter.on('_message', ({ connectionId, message }: MessageEvent) => {
     const { type, data } = message;
 
+    console.log(data);
     // For handshakes, add node to peers list
-    if (type === 'handshake') {
-      const { nodeId } = data;
+    // if (type === 'handshake') {
+    //   const { nodeId } = data;
 
-      peers.set(nodeId, connectionId);
-      emitter.emit('connect', { nodeId });
-    }
+    //   peers.set(nodeId, connectionId);
+    //   emitter.emit('connect', { nodeId });
+    // }
 
-    // For regular messages, handle normally
-    if (type === 'message') {
-      const nodeId = findNodeId(connectionId);
+    // // For regular messages, handle normally
+    // if (type === 'message') {
+    //   const nodeId = findNodeId(connectionId);
 
-      // TODO: handle no nodeId
+    //   // TODO: handle no nodeId
 
-      emitter.emit('message', { nodeId, data });
-    }
+    //   emitter.emit('message', { nodeId, data });
+    // }
   });
 
   /**

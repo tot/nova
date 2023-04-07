@@ -30,6 +30,8 @@ let mainWindow: BrowserWindow | null = null;
 
 const node = createNode();
 
+// TODO: type args
+
 ipcMain.on('ipc-example', async (event, arg) => {
   const msgTemplate = (pingPong: string) => `IPC test: ${pingPong}`;
   console.log(msgTemplate(arg));
@@ -72,14 +74,25 @@ ipcMain.handle('connect', async (event, ...args) => {
 
 ipcMain.handle('get_ip', async (event, ...args) => {
   const interfaces = os.networkInterfaces();
-  // Add check for operating system win32
-  // for windows, should be interfaces["Wi-Fi"][1].address
-  // const ip = interfaces.en0[1].address;
-  return '';
+  switch (process.platform) {
+    case 'win32':
+      return interfaces['Wi-Fi'][1].address;
+    case 'darwin':
+      return interfaces.en0[1].address;
+    default:
+      return interfaces['Wi-Fi'][1].address;
+  }
 });
 
-node.on('_connect', () => {
-  console.log('abcs');
+node.on('_connect', (...args) => {
+  prisma.peer.create({
+    data: {
+      id: args[0],
+      name: '',
+      ip: args[1],
+      port: args[2],
+    },
+  });
 });
 
 if (process.env.NODE_ENV === 'production') {
