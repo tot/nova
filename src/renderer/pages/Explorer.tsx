@@ -1,7 +1,7 @@
 function Explorer() {
   return (
-    <div className="p-2 w-full bg-gray-800 rounded">
-      <h1 className="font-medium text-lg">Activity</h1>
+    <div className="space-y-4">
+      <h1 className="font-extrabold text-xl text-zinc-50">File Explorer</h1>
     </div>
   );
 }

@@ -5,10 +5,8 @@ const SPLIT_SEQUENCE = '}{';
 module.exports = () =>
   new Transform({
     objectMode: true,
+    // eslint-disable-next-line consistent-return
     write(chunk: any, enc: any, cb: any) {
-      // Split int json messages by the following
-      // sequence. But keep in mind we may see it
-      // inside a string inside JSON
       const possibleMessages = chunk.toString().split(SPLIT_SEQUENCE);
 
       for (let i = 0; i < possibleMessages.length - 1; i += 1) {

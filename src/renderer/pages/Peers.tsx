@@ -4,6 +4,13 @@ import { useEffect, useMemo, useReducer, useState } from 'react';
 function Peers() {
   const [peer, setPeer] = useState('');
 
+  // Fetch peers on load
+  // useEffect(() => {
+
+  // })
+
+  // Update peers based on disconnect/join
+
   const rerender = useReducer(() => ({}), {})[1];
 
   const [sorting, setSorting] = useState<SortingState>([]);

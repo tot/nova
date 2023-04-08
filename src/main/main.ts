@@ -35,12 +35,12 @@ const node = createNode();
 ipcMain.on('ipc-example', async (event, arg) => {
   const msgTemplate = (pingPong: string) => `IPC test: ${pingPong}`;
   console.log(msgTemplate(arg));
-  const data = await prisma.peer.findMany({
-    where: {
-      ip: '192.168.1.1',
-    },
-  });
-  console.log('database search: ', data);
+  // Test Prisma query
+  // const data = await prisma.peer.findMany({
+  //   where: {
+  //     ip: '192.168.1.1',
+  //   },
+  // });
   event.reply('ipc-example', msgTemplate('pong'));
 });
 
@@ -49,12 +49,11 @@ ipcMain.handle('listen', async (event, ...args) => {
     event: 'listen',
     success: false,
   };
-  console.log('serverside listen');
   node.listen(3000, '0.0.0.0', () => {
     msg.success = true;
-    console.log('logger');
+    log.info('Node listening for incoming connections.');
   });
-  console.log(msg);
+
   return msg;
 });
 
@@ -64,10 +63,9 @@ ipcMain.handle('connect', async (event, ...args) => {
     success: false,
   };
   const splitIP = args[0][0].split(':');
-  console.log(splitIP);
   node.connect(splitIP[0], Number(splitIP[1]), () => {
-    console.log('connected');
     msg.success = true;
+    log.info(`Connected to ${args[0][0]}`);
   });
   return msg;
 });
@@ -76,23 +74,33 @@ ipcMain.handle('get_ip', async (event, ...args) => {
   const interfaces = os.networkInterfaces();
   switch (process.platform) {
     case 'win32':
-      return interfaces['Wi-Fi'][1].address;
+      if (interfaces['Wi-Fi']) {
+        return interfaces['Wi-Fi'][1].address;
+      }
+      return 'IP Unavailable';
     case 'darwin':
-      return interfaces.en0[1].address;
+      if (interfaces.en0) {
+        return interfaces.en0[1].address;
+      }
+      return 'IP Unavailable';
     default:
-      return interfaces['Wi-Fi'][1].address;
+      return 'IP Unavailable';
   }
 });
 
-node.on('_connect', (...args) => {
-  prisma.peer.create({
+node.on('_connect', async (...args) => {
+  log.info(
+    `Adding peer ${args[0]} - ${args[1]}:${args[2].toString()} to database`
+  );
+  const create = await prisma.peer.create({
     data: {
       id: args[0],
       name: '',
       ip: args[1],
-      port: args[2],
+      port: args[2].toString(),
     },
   });
+  console.log(create);
 });
 
 if (process.env.NODE_ENV === 'production') {

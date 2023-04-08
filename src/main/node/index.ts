@@ -147,23 +147,22 @@ const Server = () => {
   emitter.on('_message', ({ connectionId, message }: MessageEvent) => {
     const { type, data } = message;
 
-    console.log(data);
     // For handshakes, add node to peers list
-    // if (type === 'handshake') {
-    //   const { nodeId } = data;
+    if (type === 'handshake') {
+      const { nodeId } = data;
 
-    //   peers.set(nodeId, connectionId);
-    //   emitter.emit('connect', { nodeId });
-    // }
+      peers.set(nodeId, connectionId);
+      emitter.emit('connect', { nodeId });
+    }
 
-    // // For regular messages, handle normally
-    // if (type === 'message') {
-    //   const nodeId = findNodeId(connectionId);
+    // For regular messages, handle normally
+    if (type === 'message') {
+      const nodeId = findNodeId(connectionId);
 
-    //   // TODO: handle no nodeId
+      // TODO: handle no nodeId
 
-    //   emitter.emit('message', { nodeId, data });
-    // }
+      emitter.emit('message', { nodeId, data });
+    }
   });
 
   /**
