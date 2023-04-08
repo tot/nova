@@ -33,3 +33,4 @@ npm-debug.log.*
 
 # Local database
 *.db
+*/**/migration.sql
