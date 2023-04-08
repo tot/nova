@@ -28,9 +28,6 @@ npm-debug.log.*
 *.sass.d.ts
 *.scss.d.ts
 
-# Environment variables
-.env
-
-# Local database
-*.db
-*/**/migration.sql
+# eslint ignores hidden directories by default:
+# https://github.com/eslint/eslint/issues/8429
+!.erb

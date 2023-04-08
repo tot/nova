@@ -1,29 +1,29 @@
 # Nova
 
-A cross-platform peer-to-peer file transfer application.
+A cross-platform peer-to-peer file sharing application
 
+## Install
 
-### Apps
+Clone the repo and install dependencies:
 
-- `client`: desktop client
-- `core`: server client
-
-### Workspaces
-
-To work within a workspace, run the following command:
-
-```
-cd nova
-npm run <script> --workspace=<workspace>
+```bash
+git clone --depth 1 --branch main https://github.com/tot/nova.git your-project-name
+cd your-project-name
+npm install
 ```
 
-### Adding Packages
+## Starting Development
 
-To add a package to a workspace, run the following command:
+Start the app in the `dev` environment:
 
+```bash
+npm start
 ```
-cd nova
-npm install <package> -w <workspace>
-```
 
-[Additional Workspace Information](https://docs.npmjs.com/cli/v9/using-npm/workspaces)
+## Packaging for Production
+
+To package apps for the local platform:
+
+```bash
+npm run package
+```
