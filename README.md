@@ -2,6 +2,15 @@
 
 A cross-platform peer-to-peer file sharing application
 
+## Tech Stack
+
+- Electron
+- React
+- TypeScript
+- TailwindCSS
+- SQLite3
+- Prisma
+
 ## Install
 
 Clone the repo and install dependencies:
@@ -13,6 +22,14 @@ npm install
 ```
 
 ## Starting Development
+
+Set up the local database:
+
+```bash
+npm run initialize
+```
+
+> NOTE: On every change to `prisma.schema`, you must run `npm run reset:dev`
 
 Start the app in the `dev` environment:
 

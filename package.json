@@ -50,7 +50,7 @@
     "seed": "ts-node prisma/seed.ts",
     "migrate:dev": "npx prisma migrate dev",
     "reset:dev": "npx prisma migrate reset",
-    "initialize": "npm run generate && npm run reset:dev && npm run seed"
+    "initialize": "npm run generate && npm run migrate:dev && npm run reset:dev && npm run seed"
   },
   "browserslist": [],
   "prisma": {
