@@ -13,10 +13,12 @@ import { app, BrowserWindow, shell, ipcMain } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import os from 'os';
+import fs from 'fs';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 import createNode from './node';
 import prisma from './prisma';
+import { SendableMessage } from './types';
 
 class AppUpdater {
   constructor() {
@@ -46,7 +48,14 @@ ipcMain.on('ipc-example', async (event, arg) => {
 
 ipcMain.handle('send-file', async (event, arg: string) => {
   const filepath = arg;
-  console.log(filepath);
+  fs.readFile(filepath, { encoding: 'base64' }, (err, fileContent) => {
+    const filename = path.basename(filepath);
+    const message: SendableMessage = {
+      type: 'message',
+      data: { filename, fileContent },
+    };
+    node.broadcast(message);
+  });
 });
 
 ipcMain.handle('listen', async (event, ...args) => {
