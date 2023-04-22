@@ -51,7 +51,7 @@ ipcMain.handle('send-file', async (event, arg: string) => {
   fs.readFile(filepath, { encoding: 'base64' }, (err, fileContent) => {
     const filename = path.basename(filepath);
     const message: SendableMessage = {
-      type: 'message',
+      type: 'file',
       data: { filename, fileContent },
     };
     node.broadcast(message);
