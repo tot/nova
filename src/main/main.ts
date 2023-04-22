@@ -44,6 +44,11 @@ ipcMain.on('ipc-example', async (event, arg) => {
   event.reply('ipc-example', msgTemplate('pong'));
 });
 
+ipcMain.handle('send-file', async (event, arg: string) => {
+  const filepath = arg;
+  console.log(filepath);
+});
+
 ipcMain.handle('listen', async (event, ...args) => {
   const msg = {
     event: 'listen',
