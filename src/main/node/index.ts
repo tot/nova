@@ -1,6 +1,8 @@
 import { nanoid } from 'nanoid';
 import { Socket, createServer } from 'net';
 import { EventEmitter } from 'events';
+import os from 'os';
+import fs from 'fs';
 import messageStream from './messageStream';
 import { MessageEvent, Packet, SendableMessage } from '../types';
 
@@ -142,6 +144,20 @@ const Server = () => {
   });
 
   /**
+   * Save a file to the user's Documents folder
+   * @param filename Name of file to save
+   * @param fileContent Base64-encoded file content to save
+   */
+  const saveFile = (filename: string, fileContent: string) => {
+    const saveFolder = `${os.homedir()}/Documents/`;
+    const savePath = saveFolder + filename;
+    fs.writeFile(savePath, fileContent, { encoding: 'base64' }, (err) => {
+      if (err) return console.log(err);
+      return console.log('File saved');
+    });
+  };
+
+  /**
    * On message received, check type of message and continue accordingly
    */
   emitter.on('_message', ({ connectionId, message }: MessageEvent) => {
@@ -162,6 +178,12 @@ const Server = () => {
       // TODO: handle no nodeId
 
       emitter.emit('message', { nodeId, data });
+    }
+
+    // For files
+    if (type === 'file') {
+      const { filename, fileContent } = data;
+      saveFile(filename, fileContent);
     }
   });
 
